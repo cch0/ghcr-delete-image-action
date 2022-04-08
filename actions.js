@@ -2,7 +2,7 @@ const utils = require("./utils");
 const core = require("@actions/core");
 
 async function deleteByTag(config, octokit) {
-  core.info(`🔎 hmmm  search package version with tag ${config.tag}...`);
+  core.info(`🔎 search package version with tag ${config.tag}...`);
 
   const packageVersions = await utils.findPackageVersionByTag(
     octokit,

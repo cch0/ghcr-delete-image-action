@@ -8,7 +8,7 @@ const utils = __nccwpck_require__(252);
 const core = __nccwpck_require__(186);
 
 async function deleteByTag(config, octokit) {
-  core.info(`🔎 hmmm  search package version with tag ${config.tag}...`);
+  core.info(`🔎 search package version with tag ${config.tag}...`);
 
   const packageVersions = await utils.findPackageVersionByTag(
     octokit,
@@ -6147,8 +6147,6 @@ let getConfig = function () {
 };
 
 let findPackageVersionByTag = async function (octokit, owner, name, tag) {
-  core.info(`🔎  findPackageVersionByTag`);
-
   const packageVersions = [];
 
   const tags = new Set();
@@ -6159,32 +6157,13 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag) {
     for (let tag_v of versionTags) {
       if (/^([0-9]+\.[0-9]+\.[0-9]+\-[a-z0-9]{8,})$/.test(tag_v)) {
         console.log("match " + tag_v);
-        // return pkgVer;
 
         packageVersions.push(pkgVer)
       }
     }
-
-    // versionTags.map((item) => {
-    //   tags.add(item);
-    // });
-
-    // if (versionTags.includes(tag)) {
-    //   return pkgVer;
-    // } else {
-    //   versionTags.map((item) => {
-    //     tags.add(item);
-    //   });
-    // }
   }
 
   return packageVersions;
-
-  // throw new Error(
-  //   `package with tag '${tag}' does not exits, available tags: ${Array.from(
-  //     tags
-  //   ).join(", ")}`
-  // );
 };
 
 let findPackageVersionsUntaggedOrderGreaterThan = async function (
@@ -6193,7 +6172,6 @@ let findPackageVersionsUntaggedOrderGreaterThan = async function (
   name,
   n
 ) {
-  core.info(`🔎  findPackageVersionsUntaggedOrderGreaterThan`);
 
   const pkgs = [];
 
@@ -6212,7 +6190,6 @@ let findPackageVersionsUntaggedOrderGreaterThan = async function (
 };
 
 let iteratePackageVersions = async function* (octokit, owner, name) {
-  core.info(`🔎  iteratePackageVersions`);
 
   for await (const response of octokit.paginate.iterator(
     octokit.rest.packages.getAllPackageVersionsForPackageOwnedByOrg,
@@ -6224,10 +6201,6 @@ let iteratePackageVersions = async function* (octokit, owner, name) {
       per_page: 100,
     }
   )) {
-
-    for (let data of response.data) {
-      core.info(`🔎  response.data: ${data.packageVersion} ${data.updated_at} ${data.metadata.container.tags} `)
-    }
 
     for (let packageVersion of response.data) {
       yield packageVersion;
