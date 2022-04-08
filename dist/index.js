@@ -6564,7 +6564,7 @@ let getConfig = function () {
     untaggedKeepLatest: core.getInput("untagged-keep-latest") || null,
     untaggedOlderThan: core.getInput("untagged-older-than") || null,
     tagPattern: core.getInput("tagPattern") || null,
-    ttlInDays: core.getInput("ttlInDays", { required: true }),
+    ttlInDays: core.getInput("ttlInDays") || null,
   };
 
   const definedOptionsCount = [
@@ -6886,6 +6886,8 @@ async function run() {
   try {
     const config = utils.getConfig();
     const octokit = github.getOctokit(config.token);
+
+    core.info('${config')
 
     if (config.tag) {
       await actions.deleteByTag(config, octokit);
