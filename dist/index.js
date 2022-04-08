@@ -20,7 +20,7 @@ async function deleteByTag(config, octokit) {
 
   for (let packageVersion of packageVersions) {
 
-    core.info(`🆔 package id: [${packageVersion.id}], tag: [${packageVersion.tag}], updatedAt: [${packageVersion.updatedAt}], daysOld: [${packageVersion.daysOld}]delete it...`);
+    core.info(`🆔 package id: [${packageVersion.id}], tag: [${packageVersion.tag}], updatedAt: [${packageVersion.updatedAt}], daysOld: [${packageVersion.daysOld}], delete it...`);
 
   // await utils.deletePackageVersion(
   //   octokit,
@@ -6541,7 +6541,7 @@ let getConfig = function () {
     untaggedKeepLatest: core.getInput("untagged-keep-latest") || null,
     untaggedOlderThan: core.getInput("untagged-older-than") || null,
 
-    ttlInDays: core.getInput("ttlInDays", { required: false }) || 7,
+    ttlInDays: core.getInput("ttlInDays", { required: true }),
   };
 
   const definedOptionsCount = [

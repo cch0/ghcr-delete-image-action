@@ -17,7 +17,7 @@ let getConfig = function () {
     untaggedKeepLatest: core.getInput("untagged-keep-latest") || null,
     untaggedOlderThan: core.getInput("untagged-older-than") || null,
 
-    ttlInDays: core.getInput("ttlInDays", { required: false }) || 7,
+    ttlInDays: core.getInput("ttlInDays", { required: true }),
   };
 
   const definedOptionsCount = [
