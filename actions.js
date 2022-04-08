@@ -8,7 +8,8 @@ async function deleteByTag(config, octokit) {
     octokit,
     config.owner,
     config.name,
-    config.tag
+    config.tag,
+    config.ttlInDays
   );
 
   for (let packageVersion of packageVersions) {

@@ -16,12 +16,15 @@ let getConfig = function () {
     tag: core.getInput("tag") || null,
     untaggedKeepLatest: core.getInput("untagged-keep-latest") || null,
     untaggedOlderThan: core.getInput("untagged-older-than") || null,
+
+    ttlInDays: core.getInput("ttlInDays", { required: false }) || 7,
   };
 
   const definedOptionsCount = [
     config.tag,
     config.untaggedKeepLatest,
     config.untaggedOlderThan,
+    config.ttlInDays,
   ].filter((x) => x !== null).length;
 
   if (definedOptionsCount == 0) {
@@ -49,7 +52,7 @@ let getConfig = function () {
   return config;
 };
 
-let findPackageVersionByTag = async function (octokit, owner, name, tag) {
+let findPackageVersionByTag = async function (octokit, owner, name, tag, ttlInDays) {
   const packageVersions = [];
 
   const tags = new Set();
@@ -66,14 +69,14 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag) {
           parseJSON(pkgVer.updated_at)
         )
 
-        // console.log(" days " + days)
-
-        packageVersions.push({
-          "id": pkgVer.id,
-          "tag": tag_v,
-          "updatedAt": pkgVer.updated_at,
-          "daysOld": days
-        })
+        if (days > ttlInDays) {
+          packageVersions.push({
+            "id": pkgVer.id,
+            "tag": tag_v,
+            "updatedAt": pkgVer.updated_at,
+            "daysOld": days
+          })
+        }
       }
     }
   }
