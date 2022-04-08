@@ -55,13 +55,24 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag) {
   for await (const pkgVer of iteratePackageVersions(octokit, owner, name)) {
     const versionTags = pkgVer.metadata.container.tags;
 
-    if (versionTags.includes(tag)) {
-      return pkgVer;
-    } else {
-      versionTags.map((item) => {
-        tags.add(item);
-      });
+    for (let tag_v of versionTags) {
+      if (/^([0-9]+\.[0-9]+\.[0-9]+\-[0-9]+)$/.test(tag_v)) {
+        console.log("match " + tag_v);
+        return pkgVer;
+      }
     }
+
+    versionTags.map((item) => {
+      tags.add(item);
+    });
+
+    // if (versionTags.includes(tag)) {
+    //   return pkgVer;
+    // } else {
+    //   versionTags.map((item) => {
+    //     tags.add(item);
+    //   });
+    // }
   }
 
   throw new Error(

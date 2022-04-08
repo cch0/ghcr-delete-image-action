@@ -13,14 +13,14 @@ async function deleteByTag(config, octokit) {
 
   core.info(`🆔 package id is #${packageVersion.id}, delete it...`);
 
-  await utils.deletePackageVersion(
-    octokit,
-    config.owner,
-    config.name,
-    packageVersion.id
-  );
+  // await utils.deletePackageVersion(
+  //   octokit,
+  //   config.owner,
+  //   config.name,
+  //   packageVersion.id
+  // );
 
-  core.info(`✅ package #${packageVersion.id} deleted.`);
+  // core.info(`✅ package #${packageVersion.id} deleted.`);
 }
 
 async function deleteUntaggedOrderGreaterThan(config, octokit) {
