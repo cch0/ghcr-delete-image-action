@@ -19,7 +19,7 @@ async function deleteByTag(config, octokit) {
 
   for (let packageVersion of packageVersions) {
 
-    core.info(`🆔 package id is #${packageVersion.id}, delete it...`);
+    core.info(`🆔 package id is #${packageVersion.id}, tag is ${packageVersion.tag}, updatedAt is ${packageVersion.updatedAt} delete it...`);
 
   // await utils.deletePackageVersion(
   //   octokit,
@@ -6158,7 +6158,11 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag) {
       if (/^([0-9]+\.[0-9]+\.[0-9]+\-[a-z0-9]{8,})$/.test(tag_v)) {
         console.log("match " + tag_v);
 
-        packageVersions.push(pkgVer)
+        packageVersions.push({
+          "id": pkgVer.id,
+          "tag": tag_v,
+          "updatedAt": pkgVer.updatedAt
+        })
       }
     }
   }

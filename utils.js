@@ -59,7 +59,11 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag) {
       if (/^([0-9]+\.[0-9]+\.[0-9]+\-[a-z0-9]{8,})$/.test(tag_v)) {
         console.log("match " + tag_v);
 
-        packageVersions.push(pkgVer)
+        packageVersions.push({
+          "id": pkgVer.id,
+          "tag": tag_v,
+          "updatedAt": pkgVer.updatedAt
+        })
       }
     }
   }
