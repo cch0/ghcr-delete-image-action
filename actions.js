@@ -25,7 +25,7 @@ async function deleteByTag(config, octokit) {
 }
 
 async function deleteByTagPatternAndTTL(config, octokit) {
-  core.info(`🔎 search package version with pattern [${config.tagPattern}] and is older than [${config.ttlInDays}] days ...`);
+  core.info(`🔎 search package version with pattern ${config.tagPattern} and is older than ${config.ttlInDays} days ...`);
 
   const packageVersions = await utils.findPackageVersionByTagPatternAndTTL(
     octokit,
