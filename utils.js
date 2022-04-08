@@ -62,7 +62,6 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag, ttlInDa
 
     for (let tag_v of versionTags) {
       if (/^([0-9]+\.[0-9]+\.[0-9]+\-[a-z0-9]{8,})$/.test(tag_v)) {
-        // console.log("match " + tag_v);
 
         const days = differenceInDays(
           new Date(),
@@ -77,7 +76,7 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag, ttlInDa
             "daysOld": days
           })
         } else {
-          console.log("ignore [" + tag_v + "] since it is only [" + days + "] old.s")
+          console.log("ignore tag [" + tag_v + "] since it is only [" + days + "] days old.")
         }
       }
     }
