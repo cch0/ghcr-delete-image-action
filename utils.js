@@ -1,5 +1,6 @@
 const core = require("@actions/core");
 var parseJSON = require('date-fns/parseJSON')
+var differenceInDays = require('date-fns/differenceInDays')
 
 /**
  * Parse input from env.
