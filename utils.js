@@ -76,6 +76,8 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag, ttlInDa
             "updatedAt": pkgVer.updated_at,
             "daysOld": days
           })
+        } else {
+          console.log("ignore [" + tag_v + "] since it is only [" + days + "] old.s")
         }
       }
     }

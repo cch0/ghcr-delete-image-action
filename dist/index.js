@@ -8,7 +8,7 @@ const utils = __nccwpck_require__(1252);
 const core = __nccwpck_require__(2186);
 
 async function deleteByTag(config, octokit) {
-  core.info(`🔎 search package version older than ${config.ttlInDays}...`);
+  core.info(`🔎 search package version older than ${config.ttlInDays} days ...`);
 
   const packageVersions = await utils.findPackageVersionByTag(
     octokit,
@@ -6600,6 +6600,8 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag, ttlInDa
             "updatedAt": pkgVer.updated_at,
             "daysOld": days
           })
+        } else {
+          console.log("ignore [" + tag_v + "] since it is only [" + days + "] old.s")
         }
       }
     }
