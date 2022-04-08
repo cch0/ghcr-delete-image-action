@@ -76,4 +76,4 @@ async function deleteUntaggedOrderGreaterThan(config, octokit) {
   core.endGroup();
 }
 
-module.exports = { deleteByTag, deleteUntaggedOrderGreaterThan };
+module.exports = { deleteByTag, deleteUntaggedOrderGreaterThan, deleteByTagPatternAndTTL };

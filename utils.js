@@ -172,6 +172,7 @@ function sleep(ms) {
 module.exports = {
   getConfig,
   findPackageVersionByTag,
+  findPackageVersionByTagPatternAndTTL,
   deletePackageVersion,
   findPackageVersionsUntaggedOrderGreaterThan,
   sleep,
