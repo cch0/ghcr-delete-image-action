@@ -10,14 +10,16 @@ const core = __nccwpck_require__(186);
 async function deleteByTag(config, octokit) {
   core.info(`🔎 hmmm  search package version with tag ${config.tag}...`);
 
-  const packageVersion = await utils.findPackageVersionByTag(
+  const packageVersions = await utils.findPackageVersionByTag(
     octokit,
     config.owner,
     config.name,
     config.tag
   );
 
-  core.info(`🆔 package id is #${packageVersion.id}, delete it...`);
+  for (let packageVersion of packageVersions) {
+
+    core.info(`🆔 package id is #${packageVersion.id}, delete it...`);
 
   // await utils.deletePackageVersion(
   //   octokit,
@@ -27,6 +29,7 @@ async function deleteByTag(config, octokit) {
   // );
 
   // core.info(`✅ package #${packageVersion.id} deleted.`);
+  }
 }
 
 async function deleteUntaggedOrderGreaterThan(config, octokit) {
@@ -6146,6 +6149,8 @@ let getConfig = function () {
 let findPackageVersionByTag = async function (octokit, owner, name, tag) {
   core.info(`🔎  findPackageVersionByTag`);
 
+  const packageVersions = [];
+
   const tags = new Set();
 
   for await (const pkgVer of iteratePackageVersions(octokit, owner, name)) {
@@ -6154,13 +6159,15 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag) {
     for (let tag_v of versionTags) {
       if (/^([0-9]+\.[0-9]+\.[0-9]+\-[a-z0-9]{8,})$/.test(tag_v)) {
         console.log("match " + tag_v);
-        return pkgVer;
+        // return pkgVer;
+
+        packageVersions.push(pkgVer)
       }
     }
 
-    versionTags.map((item) => {
-      tags.add(item);
-    });
+    // versionTags.map((item) => {
+    //   tags.add(item);
+    // });
 
     // if (versionTags.includes(tag)) {
     //   return pkgVer;
@@ -6171,11 +6178,13 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag) {
     // }
   }
 
-  throw new Error(
-    `package with tag '${tag}' does not exits, available tags: ${Array.from(
-      tags
-    ).join(", ")}`
-  );
+  return packageVersions;
+
+  // throw new Error(
+  //   `package with tag '${tag}' does not exits, available tags: ${Array.from(
+  //     tags
+  //   ).join(", ")}`
+  // );
 };
 
 let findPackageVersionsUntaggedOrderGreaterThan = async function (

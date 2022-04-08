@@ -4,14 +4,16 @@ const core = require("@actions/core");
 async function deleteByTag(config, octokit) {
   core.info(`🔎 hmmm  search package version with tag ${config.tag}...`);
 
-  const packageVersion = await utils.findPackageVersionByTag(
+  const packageVersions = await utils.findPackageVersionByTag(
     octokit,
     config.owner,
     config.name,
     config.tag
   );
 
-  core.info(`🆔 package id is #${packageVersion.id}, delete it...`);
+  for (let packageVersion of packageVersions) {
+
+    core.info(`🆔 package id is #${packageVersion.id}, delete it...`);
 
   // await utils.deletePackageVersion(
   //   octokit,
@@ -21,6 +23,7 @@ async function deleteByTag(config, octokit) {
   // );
 
   // core.info(`✅ package #${packageVersion.id} deleted.`);
+  }
 }
 
 async function deleteUntaggedOrderGreaterThan(config, octokit) {
