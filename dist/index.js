@@ -6152,7 +6152,7 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag) {
     const versionTags = pkgVer.metadata.container.tags;
 
     for (let tag_v of versionTags) {
-      if (/^([0-9]+\.[0-9]+\.[0-9]+\-[0-9]+)$/.test(tag_v)) {
+      if (/^([0-9]+\.[0-9]+\.[0-9]+\-[0-9a-z]+)$/.test(tag_v)) {
         console.log("match " + tag_v);
         return pkgVer;
       }
@@ -6216,17 +6216,9 @@ let iteratePackageVersions = async function* (octokit, owner, name) {
     }
   )) {
 
-    // console.log(response.data)
-
     for (let data of response.data) {
-      // core.info(`===> updated_at: ${data.updated_at}  `)
-
-      // console.log(data.metadata.container.tag)
-
       core.info(`🔎  response.data: ${data.packageVersion} ${data.updated_at} ${data.metadata.container.tags} `)
     }
-
-
 
     for (let packageVersion of response.data) {
       yield packageVersion;
