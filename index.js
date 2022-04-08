@@ -8,7 +8,8 @@ async function run() {
     const config = utils.getConfig();
     const octokit = github.getOctokit(config.token);
 
-    core.info('${config}')
+
+    console.log(config)
 
     if (config.tag) {
       await actions.deleteByTag(config, octokit);
