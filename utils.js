@@ -103,7 +103,7 @@ let iteratePackageVersions = async function* (octokit, owner, name) {
     }
   )) {
 
-    console.log(response.data)
+    console.log("==> " + response.data)
 
     for (let packageVersion of response.data) {
       yield packageVersion;
