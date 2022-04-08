@@ -19,14 +19,14 @@ async function deleteByTag(config, octokit) {
 
   core.info(`🆔 package id is #${packageVersion.id}, delete it...`);
 
-  await utils.deletePackageVersion(
-    octokit,
-    config.owner,
-    config.name,
-    packageVersion.id
-  );
+  // await utils.deletePackageVersion(
+  //   octokit,
+  //   config.owner,
+  //   config.name,
+  //   packageVersion.id
+  // );
 
-  core.info(`✅ package #${packageVersion.id} deleted.`);
+  // core.info(`✅ package #${packageVersion.id} deleted.`);
 }
 
 async function deleteUntaggedOrderGreaterThan(config, octokit) {
@@ -6151,13 +6151,24 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag) {
   for await (const pkgVer of iteratePackageVersions(octokit, owner, name)) {
     const versionTags = pkgVer.metadata.container.tags;
 
-    if (versionTags.includes(tag)) {
-      return pkgVer;
-    } else {
-      versionTags.map((item) => {
-        tags.add(item);
-      });
+    for (let tag_v of versionTags) {
+      if (/^([0-9]+\.[0-9]+\.[0-9]+\-[0-9]+)$/.test(tag_v)) {
+        console.log("match " + tag_v);
+        return pkgVer;
+      }
     }
+
+    versionTags.map((item) => {
+      tags.add(item);
+    });
+
+    // if (versionTags.includes(tag)) {
+    //   return pkgVer;
+    // } else {
+    //   versionTags.map((item) => {
+    //     tags.add(item);
+    //   });
+    // }
   }
 
   throw new Error(
