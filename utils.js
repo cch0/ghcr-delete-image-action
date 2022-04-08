@@ -102,6 +102,9 @@ let iteratePackageVersions = async function* (octokit, owner, name) {
       per_page: 100,
     }
   )) {
+
+    console.log(response.data)
+
     for (let packageVersion of response.data) {
       yield packageVersion;
     }
