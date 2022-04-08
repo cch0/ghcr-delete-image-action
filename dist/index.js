@@ -8,7 +8,7 @@ const utils = __nccwpck_require__(1252);
 const core = __nccwpck_require__(2186);
 
 async function deleteByTag(config, octokit) {
-  core.info(`🔎 search package version with tag ${config.tag}...`);
+  core.info(`🔎 search package version older than ${config.ttlInDays}...`);
 
   const packageVersions = await utils.findPackageVersionByTag(
     octokit,
