@@ -48,6 +48,8 @@ let getConfig = function () {
 };
 
 let findPackageVersionByTag = async function (octokit, owner, name, tag) {
+  console.log("===> findPackageVersionByTag")
+
   const tags = new Set();
 
   for await (const pkgVer of iteratePackageVersions(octokit, owner, name)) {
@@ -75,6 +77,8 @@ let findPackageVersionsUntaggedOrderGreaterThan = async function (
   name,
   n
 ) {
+  console.log("===> findPackageVersionsUntaggedOrderGreaterThan")
+
   const pkgs = [];
 
   for await (const pkgVer of iteratePackageVersions(octokit, owner, name)) {
@@ -92,6 +96,8 @@ let findPackageVersionsUntaggedOrderGreaterThan = async function (
 };
 
 let iteratePackageVersions = async function* (octokit, owner, name) {
+  console.log("===> iteratePackageVersions")
+
   for await (const response of octokit.paginate.iterator(
     octokit.rest.packages.getAllPackageVersionsForPackageOwnedByOrg,
     {
@@ -112,6 +118,8 @@ let iteratePackageVersions = async function* (octokit, owner, name) {
 };
 
 let deletePackageVersion = async (octokit, owner, name, versionId) => {
+  console.log("===> deletePackageVersion")
+
   await octokit.rest.packages.deletePackageVersionForOrg({
     package_type: "container",
     package_name: name,
