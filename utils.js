@@ -109,8 +109,8 @@ let iteratePackageVersions = async function* (octokit, owner, name) {
     }
   )) {
 
-    for (let updated_at of response.data) {
-      core.info(`===> updated_at: ${updated_at}`)
+    for (let data of response.data) {
+      core.info(`===> updated_at: ${data.updated_at}`)
     }
 
     // core.info(`🔎  response.data: ${response.data.packageVersion} ${response.data.updated_at}`)
