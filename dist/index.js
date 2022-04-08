@@ -8,7 +8,7 @@ const utils = __nccwpck_require__(252);
 const core = __nccwpck_require__(186);
 
 async function deleteByTag(config, octokit) {
-  core.info(`🔎 search package version with tag ${config.tag}...`);
+  core.info(`🔎 hmmm  search package version with tag ${config.tag}...`);
 
   const packageVersion = await utils.findPackageVersionByTag(
     octokit,
@@ -6144,6 +6144,8 @@ let getConfig = function () {
 };
 
 let findPackageVersionByTag = async function (octokit, owner, name, tag) {
+  core.info(`🔎  findPackageVersionByTag`);
+
   const tags = new Set();
 
   for await (const pkgVer of iteratePackageVersions(octokit, owner, name)) {
@@ -6171,6 +6173,8 @@ let findPackageVersionsUntaggedOrderGreaterThan = async function (
   name,
   n
 ) {
+  core.info(`🔎  findPackageVersionsUntaggedOrderGreaterThan`);
+
   const pkgs = [];
 
   for await (const pkgVer of iteratePackageVersions(octokit, owner, name)) {
@@ -6188,6 +6192,8 @@ let findPackageVersionsUntaggedOrderGreaterThan = async function (
 };
 
 let iteratePackageVersions = async function* (octokit, owner, name) {
+  core.info(`🔎  iteratePackageVersions`);
+
   for await (const response of octokit.paginate.iterator(
     octokit.rest.packages.getAllPackageVersionsForPackageOwnedByOrg,
     {
@@ -6198,6 +6204,9 @@ let iteratePackageVersions = async function* (octokit, owner, name) {
       per_page: 100,
     }
   )) {
+
+    core.info(`🔎  response.data: ${response.data}`)
+
     for (let packageVersion of response.data) {
       yield packageVersion;
     }
@@ -6205,6 +6214,8 @@ let iteratePackageVersions = async function* (octokit, owner, name) {
 };
 
 let deletePackageVersion = async (octokit, owner, name, versionId) => {
+  core.info(`🔎  deletePackageVersion`);
+
   await octokit.rest.packages.deletePackageVersionForOrg({
     package_type: "container",
     package_name: name,
