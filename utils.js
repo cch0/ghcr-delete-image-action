@@ -62,7 +62,7 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag) {
         packageVersions.push({
           "id": pkgVer.id,
           "tag": tag_v,
-          "updatedAt": pkgVer.updatedAt
+          "updatedAt": pkgVer.updated_at
         })
       }
     }

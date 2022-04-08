@@ -13,7 +13,7 @@ async function deleteByTag(config, octokit) {
 
   for (let packageVersion of packageVersions) {
 
-    core.info(`🆔 package id is #${packageVersion.id}, tag is ${packageVersion.tag}, updatedAt is ${packageVersion.updatedAt} delete it...`);
+    core.info(`🆔 package id: [${packageVersion.id}], tag: [${packageVersion.tag}], updatedAt: [${packageVersion.updatedAt}], delete it...`);
 
   // await utils.deletePackageVersion(
   //   octokit,
