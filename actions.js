@@ -1,14 +1,37 @@
 const utils = require("./utils");
 const core = require("@actions/core");
 
-async function deleteByTag(config, octokit) {
-  core.info(`🔎 search package version older than ${config.ttlInDays} days ...`);
 
-  const packageVersions = await utils.findPackageVersionByTag(
+async function deleteByTag(config, octokit) {
+  core.info(`🔎 search package version with tag ${config.tag}...`);
+
+  const packageVersion = await utils.findPackageVersionByTag(
     octokit,
     config.owner,
     config.name,
-    config.tag,
+    config.tag
+  );
+
+  core.info(`🆔 package id is #${packageVersion.id}, delete it...`);
+
+  await utils.deletePackageVersion(
+    octokit,
+    config.owner,
+    config.name,
+    packageVersion.id
+  );
+
+  core.info(`✅ package #${packageVersion.id} deleted.`);
+}
+
+async function deleteByTagPatternAndTTL(config, octokit) {
+  core.info(`🔎 search package version with pattern [${config.tagPattern}] and is older than [${config.ttlInDays}] days ...`);
+
+  const packageVersions = await utils.findPackageVersionByTagPatternAndTTL(
+    octokit,
+    config.owner,
+    config.name,
+    config.tagPattern,
     config.ttlInDays
   );
 

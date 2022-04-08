@@ -7,14 +7,37 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 const utils = __nccwpck_require__(1252);
 const core = __nccwpck_require__(2186);
 
-async function deleteByTag(config, octokit) {
-  core.info(`🔎 search package version older than ${config.ttlInDays} days ...`);
 
-  const packageVersions = await utils.findPackageVersionByTag(
+async function deleteByTag(config, octokit) {
+  core.info(`🔎 search package version with tag ${config.tag}...`);
+
+  const packageVersion = await utils.findPackageVersionByTag(
     octokit,
     config.owner,
     config.name,
-    config.tag,
+    config.tag
+  );
+
+  core.info(`🆔 package id is #${packageVersion.id}, delete it...`);
+
+  await utils.deletePackageVersion(
+    octokit,
+    config.owner,
+    config.name,
+    packageVersion.id
+  );
+
+  core.info(`✅ package #${packageVersion.id} deleted.`);
+}
+
+async function deleteByTagPatternAndTTL(config, octokit) {
+  core.info(`🔎 search package version with pattern [${config.tagPattern}] and is older than [${config.ttlInDays}] days ...`);
+
+  const packageVersions = await utils.findPackageVersionByTagPatternAndTTL(
+    octokit,
+    config.owner,
+    config.name,
+    config.tagPattern,
     config.ttlInDays
   );
 
@@ -6540,7 +6563,7 @@ let getConfig = function () {
     tag: core.getInput("tag") || null,
     untaggedKeepLatest: core.getInput("untagged-keep-latest") || null,
     untaggedOlderThan: core.getInput("untagged-older-than") || null,
-
+    tagPattern: core.getInput("tagPattern") || null,
     ttlInDays: core.getInput("ttlInDays", { required: true }),
   };
 
@@ -6576,7 +6599,31 @@ let getConfig = function () {
   return config;
 };
 
-let findPackageVersionByTag = async function (octokit, owner, name, tag, ttlInDays) {
+
+let findPackageVersionByTag = async function (octokit, owner, name, tag) {
+  const tags = new Set();
+
+  for await (const pkgVer of iteratePackageVersions(octokit, owner, name)) {
+    const versionTags = pkgVer.metadata.container.tags;
+
+    if (versionTags.includes(tag)) {
+      return pkgVer;
+    } else {
+      versionTags.map((item) => {
+        tags.add(item);
+      });
+    }
+  }
+
+  throw new Error(
+    `package with tag '${tag}' does not exits, available tags: ${Array.from(
+      tags
+    ).join(", ")}`
+  );
+};
+
+
+let findPackageVersionByTagPatternAndTTL = async function (octokit, owner, name, tagPattern, ttlInDays) {
   const packageVersions = [];
 
   const tags = new Set();
@@ -6585,7 +6632,8 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag, ttlInDa
     const versionTags = pkgVer.metadata.container.tags;
 
     for (let tag_v of versionTags) {
-      if (/^([0-9]+\.[0-9]+\.[0-9]+\-[a-z0-9]{8,})$/.test(tag_v)) {
+      // if (/^([0-9]+\.[0-9]+\.[0-9]+\-[a-z0-9]{8,})$/.test(tag_v)) {
+      if (/^(tagPattern)$/.test(tag_v)) {
 
         const days = differenceInDays(
           new Date(),
@@ -6840,8 +6888,10 @@ async function run() {
     const config = utils.getConfig();
     const octokit = github.getOctokit(config.token);
 
-    if (config.ttlInDays) {
+    if (config.tag) {
       await actions.deleteByTag(config, octokit);
+    } else if (config.tagPattern) {
+        await actions.deleteByTagPatternAndTTL(config, octokit);
     } else if (config.untaggedKeepLatest) {
       await actions.deleteUntaggedOrderGreaterThan(config, octokit);
     }

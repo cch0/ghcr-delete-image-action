@@ -16,7 +16,7 @@ let getConfig = function () {
     tag: core.getInput("tag") || null,
     untaggedKeepLatest: core.getInput("untagged-keep-latest") || null,
     untaggedOlderThan: core.getInput("untagged-older-than") || null,
-
+    tagPattern: core.getInput("tagPattern") || null,
     ttlInDays: core.getInput("ttlInDays", { required: true }),
   };
 
@@ -52,7 +52,31 @@ let getConfig = function () {
   return config;
 };
 
-let findPackageVersionByTag = async function (octokit, owner, name, tag, ttlInDays) {
+
+let findPackageVersionByTag = async function (octokit, owner, name, tag) {
+  const tags = new Set();
+
+  for await (const pkgVer of iteratePackageVersions(octokit, owner, name)) {
+    const versionTags = pkgVer.metadata.container.tags;
+
+    if (versionTags.includes(tag)) {
+      return pkgVer;
+    } else {
+      versionTags.map((item) => {
+        tags.add(item);
+      });
+    }
+  }
+
+  throw new Error(
+    `package with tag '${tag}' does not exits, available tags: ${Array.from(
+      tags
+    ).join(", ")}`
+  );
+};
+
+
+let findPackageVersionByTagPatternAndTTL = async function (octokit, owner, name, tagPattern, ttlInDays) {
   const packageVersions = [];
 
   const tags = new Set();
@@ -61,7 +85,8 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag, ttlInDa
     const versionTags = pkgVer.metadata.container.tags;
 
     for (let tag_v of versionTags) {
-      if (/^([0-9]+\.[0-9]+\.[0-9]+\-[a-z0-9]{8,})$/.test(tag_v)) {
+      // if (/^([0-9]+\.[0-9]+\.[0-9]+\-[a-z0-9]{8,})$/.test(tag_v)) {
+      if (/^(tagPattern)$/.test(tag_v)) {
 
         const days = differenceInDays(
           new Date(),

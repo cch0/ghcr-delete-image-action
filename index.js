@@ -8,8 +8,10 @@ async function run() {
     const config = utils.getConfig();
     const octokit = github.getOctokit(config.token);
 
-    if (config.ttlInDays) {
+    if (config.tag) {
       await actions.deleteByTag(config, octokit);
+    } else if (config.tagPattern) {
+        await actions.deleteByTagPatternAndTTL(config, octokit);
     } else if (config.untaggedKeepLatest) {
       await actions.deleteUntaggedOrderGreaterThan(config, octokit);
     }
