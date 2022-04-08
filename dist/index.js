@@ -6635,7 +6635,8 @@ let findPackageVersionByTagPatternAndTTL = async function (octokit, owner, name,
 
     for (let tag_v of versionTags) {
       // if (/^([0-9]+\.[0-9]+\.[0-9]+\-[a-z0-9]{8,})$/.test(tag_v)) {
-      if (/${tagPattern}/.test(tag_v)) {
+      // if (/${tagPattern}/.test(tag_v)) {
+      if (tag_v.match(tagPattern)) {
 
         const days = differenceInDays(
           new Date(),
