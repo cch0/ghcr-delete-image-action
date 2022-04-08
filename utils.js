@@ -56,7 +56,7 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag) {
     const versionTags = pkgVer.metadata.container.tags;
 
     for (let tag_v of versionTags) {
-      if (/^([0-9]+\.[0-9]+\.[0-9]+\-[0-9a-z]+)$/.test(tag_v)) {
+      if (/^([0-9]+\.[0-9]+\.[0-9]+\-[a-z0-9]{8,})$/.test(tag_v)) {
         console.log("match " + tag_v);
         return pkgVer;
       }
